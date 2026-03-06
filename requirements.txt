@@ -1,5 +1,6 @@
 pandas
-tqdm
-selenium
-webdriver_manager
 requests
+tqdm
+beautifulsoup4
+selenium
+webdriver-manager

@@ -1,0 +1,20 @@
+resources:
+  jobs:
+    link_processing_job:
+      name: ${bundle.name}-link-processing-${bundle.target}
+      tasks:
+        - task_key: json_to_csv
+          spark_python_task:
+            python_file: ${workspace.file_path}/json_to_csv.py
+          existing_cluster_id: ${var.existing_cluster_id}
+          libraries:
+            - requirements: ${workspace.file_path}/requirements.txt
+
+        - task_key: test_links
+          depends_on:
+            - task_key: json_to_csv
+          spark_python_task:
+            python_file: ${workspace.file_path}/test_links.py
+          existing_cluster_id: ${var.existing_cluster_id}
+          libraries:
+            - requirements: ${workspace.file_path}/requirements.txt

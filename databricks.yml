@@ -1,0 +1,40 @@
+bundle:
+  name: databricks
+
+sync:
+  include:
+    - json_to_csv.py
+    - test_links.py
+    - scraping_scripts/**
+    - url/**
+    - requirements.txt
+    - README.md
+
+variables:
+  existing_cluster_id:
+    description: Existing cluster ID to use for the job
+
+targets:
+  dev:
+    default: true
+    mode: development
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+
+resources:
+  jobs:
+    link_processing_job:
+      name: link-processing-job
+
+      tasks:
+        - task_key: json_to_csv_task
+          spark_python_task:
+            python_file: ./json_to_csv.py
+          existing_cluster_id: ${var.existing_cluster_id}
+
+        - task_key: test_links_task
+          depends_on:
+            - task_key: json_to_csv_task
+          spark_python_task:
+            python_file: ./test_links.py
+          existing_cluster_id: ${var.existing_cluster_id}
