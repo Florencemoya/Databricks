@@ -19,13 +19,13 @@ targets:
     default: true
     mode: development
     workspace:
+      host: https://dbc-7dc1b821-f301.cloud.databricks.com
       root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
 
 resources:
   jobs:
     link_processing_job:
       name: link-processing-job
-
       tasks:
         - task_key: json_to_csv_task
           spark_python_task:

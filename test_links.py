@@ -2,14 +2,21 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import os
 
 import pandas as pd
 import requests
 from tqdm import tqdm
 
-BASE_DIR = Path(__file__).resolve().parent
+
+if "__file__" in globals():
+    BASE_DIR = Path(__file__).resolve().parent
+else:
+    BASE_DIR = Path("/Workspace/Users/yaomoya95@gmail.com/Databricks")
+
 INPUT_FILE = BASE_DIR / "url" / "csv_url.csv"
 OUTPUT_DIR = BASE_DIR / "url"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def check_link(url: str) -> str:
@@ -23,6 +30,9 @@ def check_link(url: str) -> str:
 
 
 def main() -> None:
+    if not INPUT_FILE.exists():
+        raise FileNotFoundError(f"Fichier introuvable : {INPUT_FILE}")
+
     liens = pd.read_csv(INPUT_FILE, sep=",", encoding="utf-8")
     liens = liens.iloc[1:10]  # garde les lignes 1 à 9
 
@@ -40,7 +50,7 @@ def main() -> None:
     df_results.to_csv(output_file, index=False, encoding="utf-8")
 
     print(df_results)
-    print(f"Résultats enregistrés dans: {output_file}")
+    print(f"Résultats enregistrés dans : {output_file}")
 
 
 if __name__ == "__main__":
